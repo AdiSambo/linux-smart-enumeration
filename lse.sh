@@ -501,20 +501,7 @@ lse_serve() { #(
 
   local_ips="`ip a | grep -Eo "inet ([0-9]{1,3}\.){3}[0-9]{1,3}" | cut -d' ' -f2`"
 
-  # Get a valid and non used port
-  port=`od -An -N2 -i /dev/random|grep -Eo '[0-9]+'`
-  port_valid=true
-  while true; do
-    for ip in $local_ips; do
-      nc -z "$ip" "$port" && port_valid=false
-    done
-    if [ $((port)) -lt 1024 ] || [ $((port)) -gt 65500 ]; then
-      port_valid=false
-    fi
-    $port_valid && break
-    port=`od -An -N2 -i /dev/random|grep -Eo '[0-9]+'`
-  done
-
+  
   echo
   cecho " Serving ${white}Linux Smart Enumeration${reset} on port ${blue}$port${reset}.\n"
   echo
